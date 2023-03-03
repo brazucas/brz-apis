@@ -1,5 +1,14 @@
 plugins:
   - serverless-dotenv-plugin
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: samp-api.brz.gg
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    certificateName: samp-api.brz.gg
 
 service: samp-api
 useDotenv: true
@@ -10,7 +19,7 @@ provider:
   region: us-east-1
   memorySize: 128
   iam:
-    role: arn:aws:iam::402559046161:role/brz_lambda
+    role: arn:aws:iam::408356563302:role/brz_lambda
 package:
   # Directories and files to include in the deployed package
   patterns:
@@ -24,7 +33,7 @@ functions:
     events: 
       - http: 
           path: /download
-          method: POST
+          method: GET
           cors: true
       - http: 
           path: /{proxy+}
