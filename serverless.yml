@@ -22,11 +22,15 @@ provider:
     role: arn:aws:iam::408356563302:role/brz_lambda
 package:
   # Directories and files to include in the deployed package
+  excludeDevDependencies: true
   patterns:
     - dist/**
     - node_modules
     - package.json
     - yarn.lock
+  exclude:
+    - .cicd/**
+    - src/**
 functions:
   app:
     handler: dist/app.handler
