@@ -33,7 +33,10 @@ app.get("/download/(*)", async (req: Request, res: Response) => {
 
     const url = await createPresignedUrl(fileName as string);
 
-    res.status(200).json({ url });
+    res
+      .status(200)
+      .setHeader("Access-Control-Allow-Origin", "https://blog.brz.gg")
+      .json({ url });
   } catch (err: any) {
     res.status(500).json({
       message: err.message?.replace(/^.*?\{/, "{"),

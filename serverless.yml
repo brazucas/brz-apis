@@ -38,7 +38,11 @@ functions:
       - http: 
           path: /download
           method: GET
-          cors: true
+          cors:
+            origins: 
+              - https://blog.brz.gg
+              - https://brz.gg
+              - https://samp-api.brz.gg
       - http: 
           path: /{proxy+}
           method: ANY
