@@ -6,10 +6,10 @@ import AWS from 'aws-sdk';
 
 AWS.config.update({ region: 'us-east-1' });
 
-const FILE_WHITELIST = ['GTA_SA.iso'];
+const FILE_ALLOWLIST = ['GTA_SA.iso', 'gta_sa.exe'];
 
 export const createPresignedUrl = async (file: string) => {
-  if(!FILE_WHITELIST.includes(file)) {
+  if(!FILE_ALLOWLIST.includes(file)) {
     throw new Error('File not allowed');
   }
 
