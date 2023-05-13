@@ -16,6 +16,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@challenge/*": ["src/modules/challenge/*"],
+      "@public/*": ["src/modules/public/*"],
+      "@storage/*": ["src/modules/storage/*"],
+      "@/*": ["src/*"]
+    }
   }
 }

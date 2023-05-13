@@ -1,8 +1,8 @@
+import { ChallengeService } from '@challenge/types/challenge.interface';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { ChallengeService } from '../types/challenge.interface';
 
 @Injectable()
 export class GoogleRecaptchaAdapter implements ChallengeService {

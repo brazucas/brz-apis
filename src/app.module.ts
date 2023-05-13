@@ -1,7 +1,7 @@
+import { ChallengeModule } from '@challenge/challenge.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PublicModule } from './modules/public/public.module';
-import { ChallengeModule } from './modules/challenge/challenge.module';
+import { PublicModule } from '@public/public.module';
 
 @Module({
   imports: [PublicModule, ConfigModule.forRoot(), ChallengeModule],

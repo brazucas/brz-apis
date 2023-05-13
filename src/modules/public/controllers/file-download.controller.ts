@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  Param,
-  Query,
-  Req,
-  Res,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { ChallengeService } from 'src/modules/challenge/types/challenge.interface';
-import { StorageService } from 'src/modules/storage/types/storage.interface';
+import { ChallengeService } from '@challenge/types/challenge.interface';
+import { Controller, Get, Inject, Param, Query, Res } from '@nestjs/common';
+import { StorageService } from '@storage/types/storage.interface';
+import { Response } from 'express';
 
 @Controller('download')
 export class FileDownloadController {
@@ -18,7 +10,7 @@ export class FileDownloadController {
     @Inject('CHALLENGE_SERVICE')
     protected readonly challengeSvc: ChallengeService,
   ) {}
-  // create endpoint to receive file name as parameter
+
   @Get(':fileName')
   async downloadFile(
     @Res() res: Response,

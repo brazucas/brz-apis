@@ -2,7 +2,7 @@ import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { StorageService } from '../types/storage.interface';
+import { StorageService } from '@storage/types/storage.interface';
 
 const FILE_ALLOWLIST = ['GTA_SA.iso', 'gta_sa.exe'];
 
