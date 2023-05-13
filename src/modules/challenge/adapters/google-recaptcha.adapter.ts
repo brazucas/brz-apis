@@ -37,8 +37,14 @@ export class GoogleRecaptchaAdapter implements ChallengeService {
       ),
     );
 
-    const recaptchaCheckJson = await recaptchaCheck.data;
+    if ([200, 201].indexOf(recaptchaCheck.status) === -1) {
+      throw new Error(
+        `Unexpected response from recaptcha endpoint: ${recaptchaCheck.status} status code`,
+      );
+    }
 
-    return recaptchaCheckJson.success;
+    const recaptchaCheckJson = recaptchaCheck.data;
+
+    return recaptchaCheckJson.success === true;
   };
 }
