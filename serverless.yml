@@ -1,6 +1,7 @@
 plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
+  - serverless-offline
 
 custom:
   customDomain:
@@ -25,25 +26,21 @@ package:
   excludeDevDependencies: true
   patterns:
     - dist/**
-    - node_modules
     - package.json
     - yarn.lock
-  exclude:
-    - .cicd/**
-    - src/**
+    - '!.cicd/**'
+    - '!src/**'
+    - '!terraform/**'
+    - '!test/**'
 functions:
   app:
-    handler: dist/app.handler
-    events: 
-      - http: 
-          path: /download
-          method: GET
-          cors:
+    handler: dist/lambda.handler
+    events:
+     - http:
+         method: any
+         path: /{any+}
+         cors:
             origins: 
               - https://blog.brz.gg
               - https://brz.gg
               - https://samp-api.brz.gg
-      - http: 
-          path: /{proxy+}
-          method: ANY
-          cors: true
