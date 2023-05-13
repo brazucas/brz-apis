@@ -7,6 +7,7 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
+  coveragePathIgnorePatterns: ['src/modules/.*/config', 'src/lambda', 'src/main.ts', '.*module.ts'],
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
