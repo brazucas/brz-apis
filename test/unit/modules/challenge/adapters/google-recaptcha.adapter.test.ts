@@ -1,6 +1,5 @@
 import { GoogleRecaptchaAdapter } from '@challenge/adapters/google-recaptcha.adapter';
 import { HttpService } from '@nestjs/axios';
-import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
