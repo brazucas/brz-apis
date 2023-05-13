@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { StorageService } from '../types/storage.interface';
 
-const FILE_WHITELIST = ['GTA_SA.iso'];
+const FILE_ALLOWLIST = ['GTA_SA.iso', 'gta_sa.exe'];
 
 @Injectable()
 export class AWSS3Adpter implements StorageService {
@@ -14,7 +14,7 @@ export class AWSS3Adpter implements StorageService {
     file: string,
     expiresIn = this.configSvc.get<number>('fileDownloadExpirationTime'),
   ): Promise<string> {
-    if (!FILE_WHITELIST.includes(file)) {
+    if (!FILE_ALLOWLIST.includes(file)) {
       throw new Error('File not allowed');
     }
 
