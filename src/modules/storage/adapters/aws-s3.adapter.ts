@@ -7,10 +7,24 @@ import { StorageService } from '@storage/types/storage.interface';
 const FILE_ALLOWLIST = ['GTA_SA.iso', 'gta_sa.exe'];
 
 @Injectable()
-export class AWSS3Adpter implements StorageService {
-  constructor(protected readonly configSvc: ConfigService) {}
+export class AWSS3Adapter implements StorageService {
+  protected s3Client: S3Client;
 
-  async generateDownloadUrl(
+  constructor(protected readonly configSvc: ConfigService) {
+    this.client = new S3Client({
+      region: this.configSvc.get<string>('region'),
+    });
+  }
+
+  get client(): S3Client {
+    return this.s3Client;
+  }
+
+  set client(client: S3Client) {
+    this.s3Client = client;
+  }
+
+  generateDownloadUrl(
     file: string,
     expiresIn = this.configSvc.get<number>('fileDownloadExpirationTime'),
   ): Promise<string> {
@@ -18,21 +32,11 @@ export class AWSS3Adpter implements StorageService {
       throw new Error('File not allowed');
     }
 
-    const client = new S3Client({
-      region: this.configSvc.get<string>('region'),
-    });
-
     const command = new GetObjectCommand({
       Bucket: this.configSvc.get<string>('storage.cdnBucket'),
       Key: file,
     });
 
-    return await getSignedUrl(client, command, { expiresIn })
-      .then((url) => {
-        return url;
-      })
-      .catch((err) => {
-        throw err;
-      });
+    return getSignedUrl(this.client, command, { expiresIn });
   }
 }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AWSS3Adpter } from './adapters/aws-s3.adapter';
+import { AWSS3Adapter } from './adapters/aws-s3.adapter';
 import aws from './config/aws';
 
 @Module({
@@ -12,7 +12,7 @@ import aws from './config/aws';
   providers: [
     {
       provide: 'STORAGE_SERVICE',
-      useClass: AWSS3Adpter,
+      useClass: AWSS3Adapter,
     },
   ],
   exports: ['STORAGE_SERVICE'],
