@@ -14,8 +14,8 @@ export class FileDownloadController {
   @Get(':fileName')
   async downloadFile(
     @Res() res: Response,
-    @Param('fileName') fileName: string,
-    @Query('token') token: string,
+    @Param('fileName') fileName: string | null | undefined,
+    @Query('token') token: string | null | undefined,
   ) {
     if (!fileName) {
       return res.status(400).json({
@@ -40,7 +40,7 @@ export class FileDownloadController {
         .json({ url });
     } catch (err: any) {
       res.status(500).json({
-        message: err.message?.replace(/^.*?\{/, '{'),
+        message: err.message,
       });
     }
   }
