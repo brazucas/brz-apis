@@ -2,6 +2,11 @@ name: test coverage
 on:
   workflow_run:
     workflows: ["website-api ci"]
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/coverage.yml'
 jobs:
   coverage:
     name: coverage
