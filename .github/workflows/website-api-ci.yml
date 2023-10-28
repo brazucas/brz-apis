@@ -28,5 +28,10 @@ jobs:
         working-directory: ${{ env.working_path }}
       - run: yarn install
         working-directory: ${{ env.working_path }}
-      - run: yarn test
-        working-directory: ${{ env.working_path }}
+      - name: run tests & report coverage
+        uses: paambaati/codeclimate-action@v4.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: yarn test:cov
+          workingDirectory: ${{ env.working_path }}
