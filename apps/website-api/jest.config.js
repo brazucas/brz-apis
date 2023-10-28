@@ -1,25 +1,28 @@
-const { pathsToModuleNameMapper } = require('ts-jest');
-const { compilerOptions } = require('./tsconfig');
+const { pathsToModuleNameMapper } = require("ts-jest");
+const { compilerOptions } = require("./tsconfig.json");
 
 module.exports = {
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
+  testEnvironment: "node",
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    "^.+\\.tsx?$": "ts-jest",
   },
-  coveragePathIgnorePatterns: ['src/modules/.*/config', 'src/lambda', 'src/main.ts', '.*module.ts'],
-  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
-  coverageDirectory: './coverage',
-  testEnvironment: 'node',
-  coverageThreshold: {
-    global: {
-      branches: 0,
-      functions: 0,
-      lines: 0,
-      statements: 0,
-    },
+  moduleFileExtensions: ["ts", "tsx", "js", "json", "node"],
+  testRegex: "(/test/.*|(\\.|/)(test))\\.(ts|js)x?$",
+  testPathIgnorePatterns: ["./test/mocks/"],
+  coverageDirectory: "coverage",
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx,js,jsx}",
+    "!src/app.ts",
+    "!src/index.ts",
+    "!src/tracer.ts",
+    "!src/lambda.ts",
+  ],
+  moduleNameMapper: {
+    "@/(.*)$": "<rootDir>/src/$1",
+    "@test/(.*)$": "<rootDir>/test/$1",
   },
+  modulePathIgnorePatterns: ["__fixtures__"],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>',
+    prefix: "<rootDir>",
   }),
 };

@@ -30,7 +30,6 @@ package:
     - yarn.lock
     - '!.cicd/**'
     - '!src/**'
-    - '!terraform/**'
     - '!test/**'
 functions:
   app:

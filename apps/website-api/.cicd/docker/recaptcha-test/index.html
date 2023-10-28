@@ -1,0 +1,19 @@
+<script src="https://www.google.com/recaptcha/api.js?render=6Lf0wMskAAAAALqH-mgpbLl9hKFopVzc2W7Vr3zI"></script>
+
+<script>
+  grecaptcha.ready(function () {
+    grecaptcha
+      .execute("6Lf0wMskAAAAALqH-mgpbLl9hKFopVzc2W7Vr3zI", {
+        action: "submit",
+      })
+      .then(async (token) => {
+        const { url } = await fetch(
+          "http://localhost:3000/download/GTA_SA.iso?token=" + token
+        ).then((response) => response.json());
+
+        document.body.innerHTML += `<a href="${url}">${url}</a>`;
+      });
+  });
+</script>
+
+<body></body>
