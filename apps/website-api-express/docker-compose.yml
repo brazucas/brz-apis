@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  website-api:
+    container_name: website-api
+    build:
+      context: .
+      dockerfile: .cicd/docker/Dockerfile
+      target: development
+    ports:
+      - "${DOCKER_API_EXTERNAL_PORT:-3000}:${PORT:-3000}"
+    volumes:
+      - "./:/var/www/html"
+    networks:
+      - dmm
+  recaptcha-test:
+    container_name: recaptcha-test
+    image: nginx
+    ports:
+      - "${DOCKER_RECAPTCHA_TEST_EXTERNAL_PORT:-8080}:80"
+    volumes:
+      - ".cicd/docker/recaptcha-test:/usr/share/nginx/html:ro"
+
+networks:
+  dmm:

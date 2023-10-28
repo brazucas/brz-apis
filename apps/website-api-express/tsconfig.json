@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "declaration": true,
+      "removeComments": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "allowSyntheticDefaultImports": true,
+      "target": "es2017",
+      "sourceMap": true,
+      "outDir": "./dist",
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*", "dist/*"],
+        "@test/*": ["test/*"],
+        "@challenge/*": ["src/challenge/*"],
+        "@file-download/*": ["src/file-download/*"],
+        "@storage/*": ["src/storage/*"],
+      },
+      "incremental": true,
+      "resolveJsonModule": true,
+      "lib": [
+        "ES2020.Promise",
+        "ES2019.Array",
+      ]
+    }
+  }

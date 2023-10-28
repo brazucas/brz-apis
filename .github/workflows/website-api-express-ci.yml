@@ -1,0 +1,37 @@
+name: website-api-express ci
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/website-api-express/src/*
+      - apps/website-api-express/test/*
+      - apps/website-api-express/'*.json'
+      - apps/website-api-express/yarn.lock
+      - apps/website-api-express/.github/workflows/ci.yml
+  pull_request:
+    paths:
+      - '!*.MD'
+jobs:
+  test:
+    env:
+      working_path: apps/website-api-express
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest ]
+        node: [ '18' ]
+    name: test/node ${{ matrix.node }}/${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install -g yarn
+        working-directory: ${{ env.working_path }}
+      - run: yarn install
+        working-directory: ${{ env.working_path }}
+      - run: yarn build
+        working-directory: ${{ env.working_path }}
+      - run: yarn test
+        working-directory: ${{ env.working_path }}
