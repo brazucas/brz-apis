@@ -7,3 +7,4 @@
 .DS_Store
 .terraform
 .terraform.lock*
+.serverless
