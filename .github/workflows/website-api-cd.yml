@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/website-api-express/**'
+      - 'apps/website-api/**'
   workflow_dispatch:
 
 jobs:

@@ -1,21 +1,21 @@
-name: website-api-express ci
+name: website-api ci
 on:
   push:
     branches:
       - main
     paths:
-      - apps/website-api-express/src/*
-      - apps/website-api-express/test/*
-      - apps/website-api-express/'*.json'
-      - apps/website-api-express/yarn.lock
-      - apps/website-api-express/.github/workflows/ci.yml
+      - apps/website-api/src/*
+      - apps/website-api/test/*
+      - apps/website-api/'*.json'
+      - apps/website-api/yarn.lock
+      - apps/website-api/.github/workflows/ci.yml
   pull_request:
     paths:
       - '!*.MD'
 jobs:
   test:
     env:
-      working_path: apps/website-api-express
+      working_path: apps/website-api
     strategy:
       matrix:
         platform: [ ubuntu-latest ]
@@ -33,5 +33,10 @@ jobs:
         working-directory: ${{ env.working_path }}
       - run: yarn build
         working-directory: ${{ env.working_path }}
-      - run: yarn test
-        working-directory: ${{ env.working_path }}
+      - name: Run tests & Report Coverage
+        uses: paambaati/codeclimate-action@v4.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: yarn test:cov
+          workingDirectory: ${{ env.working_path }}
