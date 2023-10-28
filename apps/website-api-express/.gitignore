@@ -5,3 +5,5 @@
 .vscode
 .env
 .DS_Store
+.terraform
+.terraform.lock*
