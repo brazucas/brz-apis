@@ -38,7 +38,7 @@ jobs:
         env:
           TF_VAR_github_pat: ${{ secrets.GH_PAT }}
 
-  build_and_sync:
+  build_and_deploy:
     name: Build project and Deploy
     runs-on: ubuntu-latest
     env:
@@ -49,7 +49,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with: 
-          node-version: "lts/*"
+          node-version: 18.x
       - name: Build project
         run: |
           yarn install
@@ -69,4 +69,4 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@v3.2
         with:
-          args: -c "cd ${{ env.working_path }} && serverless deploy"
+          args: -c "cd ./${{ env.working_path }} && serverless deploy"
