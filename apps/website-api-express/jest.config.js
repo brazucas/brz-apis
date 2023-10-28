@@ -1,3 +1,6 @@
+const { pathsToModuleNameMapper } = require("ts-jest");
+const { compilerOptions } = require("./tsconfig.json");
+
 module.exports = {
   testEnvironment: "node",
   transform: {
@@ -12,10 +15,14 @@ module.exports = {
     "!src/app.ts",
     "!src/index.ts",
     "!src/tracer.ts",
+    "!src/lambda.ts",
   ],
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/src/$1",
     "@test/(.*)$": "<rootDir>/test/$1",
   },
   modulePathIgnorePatterns: ["__fixtures__"],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: "<rootDir>",
+  }),
 };

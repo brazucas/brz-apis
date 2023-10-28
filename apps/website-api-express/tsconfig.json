@@ -15,13 +15,13 @@
         "@test/*": ["test/*"],
         "@challenge/*": ["src/challenge/*"],
         "@file-download/*": ["src/file-download/*"],
-        "@storage/*": ["src/storage/*"],
+        "@storage/*": ["src/storage/*"]
       },
       "incremental": true,
       "resolveJsonModule": true,
       "lib": [
         "ES2020.Promise",
-        "ES2019.Array",
+        "ES2019.Array"
       ]
     }
   }

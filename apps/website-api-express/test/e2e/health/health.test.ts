@@ -1,5 +1,7 @@
-import * as request from "supertest";
+process.env.RECAPTCHA_SECRET = "test";
+
 import { app } from "@/app";
+import * as request from "supertest";
 
 describe("healthRoutes - e2e", () => {
   it('should respond with "Website API" on GET /', async () => {
