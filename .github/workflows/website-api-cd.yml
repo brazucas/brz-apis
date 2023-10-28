@@ -1,4 +1,6 @@
-name: Deployment
+name: website-api cd
+
+run-name: Deploy website-api to live by @${{ github.actor }}
 
 on:
   push:
