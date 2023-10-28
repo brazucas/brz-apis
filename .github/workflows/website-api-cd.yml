@@ -12,6 +12,8 @@ on:
 
 jobs:
   terraform:
+    env:
+      working_path: apps/website-api
     runs-on: ubuntu-latest
     steps:
       - name: Clone the repository code
@@ -26,11 +28,11 @@ jobs:
           echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
           AWS_PROFILE=default && echo AWS_PROFILE=$AWS_PROFILE >> $GITHUB_ENV
       - name: Initialize the Terraform working directory
-        working-directory: .cicd/terraform
+        working-directory: ${{ env.working_path }}/.cicd/terraform
         id: init
         run: terraform init -input=false
       - name: Apply the Terraform execution plan
-        working-directory: .cicd/terraform
+        working-directory: ${{ env.working_path }}/.cicd/terraform
         id: plan
         run: terraform apply -no-color -auto-approve
         env:
@@ -39,6 +41,8 @@ jobs:
   build_and_sync:
     name: Build project and Deploy
     runs-on: ubuntu-latest
+    env:
+      working_path: apps/website-api
     steps:
       - name: Clone the repository code
         uses: actions/checkout@v2
@@ -49,12 +53,9 @@ jobs:
       - name: Build project
         run: |
           yarn install
-          PUBLIC_AUTH0_DOMAIN=${{ vars.AUTH0_DOMAIN }} \
-          PUBLIC_AUTH0_CLIENT_ID=${{ vars.AUTH0_CLIENT_ID }} \
-          AUTH0_SECRET=${{ secrets.AUTH0_SECRET }} \
-          PUBLIC_AUTH0_REDIRECT_URI=${{ vars.AUTH0_REDIRECT_URI }} \
-          PUBLIC_AUTH0_LOGOUT_URI=${{ vars.AUTH0_LOGOUT_URI }} \
+          RECAPTCHA_SECRET=${{ secrets.RECAPTCHA_SECRET }} \
           yarn build
+        working-directory: ${{ env.working_path }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -63,12 +64,9 @@ jobs:
           aws-region: sa-east-1
       - name: Create .env file
         run: |
-          echo "PUBLIC_AUTH0_DOMAIN=${{ vars.AUTH0_DOMAIN }}" >> .env
-          echo "PUBLIC_AUTH0_CLIENT_ID=${{ vars.AUTH0_CLIENT_ID }}" >> .env
-          echo "AUTH0_SECRET=${{ secrets.AUTH0_SECRET }}" >> .env
-          echo "PUBLIC_AUTH0_REDIRECT_URI=${{ vars.AUTH0_REDIRECT_URI }}" >> .env
-          echo "PUBLIC_AUTH0_LOGOUT_URI=${{ vars.AUTH0_LOGOUT_URI }}" >> .env
+          echo "RECAPTCHA_SECRET=${{ secrets.RECAPTCHA_SECRET }}" >> .env
+        working-directory: ${{ env.working_path }}
       - name: serverless deploy
         uses: serverless/github-action@v3.2
         with:
-          args: deploy
+          args: -c "cd ${{ env.working_path }} && serverless deploy"
