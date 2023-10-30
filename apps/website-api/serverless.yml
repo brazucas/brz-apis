@@ -1,4 +1,3 @@
-org: pedropapa
 app: website-api
 plugins:
   - serverless-dotenv-plugin
