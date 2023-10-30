@@ -1,3 +1,5 @@
+org: pedropapa
+app: website-api
 plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
@@ -5,13 +7,13 @@ plugins:
 
 custom:
   customDomain:
-    domainName: samp-api.brz.gg
+    domainName: website-api.brz.gg
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
-    certificateName: samp-api.brz.gg
+    certificateName: website-api.brz.gg
 
-service: samp-api
+service: website-api
 useDotenv: true
 provider:
   name: aws
@@ -42,4 +44,4 @@ functions:
             origins: 
               - https://blog.brz.gg
               - https://brz.gg
-              - https://samp-api.brz.gg
+              - https://website-api.brz.gg
