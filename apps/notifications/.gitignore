@@ -1,0 +1,10 @@
+/dist
+/node_modules
+/coverage
+/.nyc_output
+.vscode
+.env
+.DS_Store
+.terraform
+.terraform.lock*
+.serverless
