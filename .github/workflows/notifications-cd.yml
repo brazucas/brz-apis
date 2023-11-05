@@ -1,19 +1,19 @@
-name: website-api cd
+name: notifications cd
 
-run-name: Deploy website-api to live by @${{ github.actor }}
+run-name: Deploy notifications to live by @${{ github.actor }}
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'apps/website-api/**'
+      - 'apps/notifications/**'
   workflow_dispatch:
 
 jobs:
   terraform:
     env:
-      working_path: apps/website-api
+      working_path: apps/notifications
     runs-on: ubuntu-latest
     steps:
       - name: Clone the repository code
@@ -42,7 +42,7 @@ jobs:
     name: Build project and Deploy
     runs-on: ubuntu-latest
     env:
-      working_path: apps/website-api
+      working_path: apps/notifications
     steps:
       - name: Clone the repository code
         uses: actions/checkout@v2
