@@ -105,7 +105,7 @@ const codeRequest = async (
   if (tries >= Number(process.env.MAX_CODES)) {
     const newNextTry = new Date(
       new Date().getTime() +
-        Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600)
+        Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600) * 1000
     );
 
     await notificationService.writeCode(id, code, 0, newNextTry);

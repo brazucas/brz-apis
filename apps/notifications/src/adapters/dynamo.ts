@@ -42,11 +42,11 @@ export const readCode = (id: string): Promise<GetItemOutput> => {
   return db.getItem(params);
 };
 
-export const confirmWhitelistCodes = (id: string): Promise<PutItemOutput> => {
+export const confirmCodes = (id: string): Promise<PutItemOutput> => {
   const db = new DynamoDB({ apiVersion: "2012-08-10", region: "us-east-1" });
 
   const params: UpdateItemCommandInput = {
-    TableName: "WHITELIST_CONFIRMATION",
+    TableName: "CONFIRMATION_CODE",
     Key: {
       steamId: { S: id },
     },
