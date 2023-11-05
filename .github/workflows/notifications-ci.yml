@@ -1,21 +1,21 @@
-name: website-api ci
+name: notifications ci
 
-run-name: Running website-api CI by @${{ github.actor }}
+run-name: Running notifications CI by @${{ github.actor }}
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'apps/website-api/**'
+      - 'apps/notifications/**'
   pull_request:
     paths:
       - '!*.MD'
-      - 'apps/website-api/**'
+      - 'apps/notifications/**'
 jobs:
   test:
     env:
-      working_path: apps/website-api
+      working_path: apps/notifications
     strategy:
       matrix:
         platform: [ ubuntu-latest ]
