@@ -1,5 +1,10 @@
 import { Request, Response, Router } from "express";
-import { generateCode, mailValidation, phoneValidation } from "./helpers";
+import {
+  addSeconds,
+  generateCode,
+  mailValidation,
+  phoneValidation,
+} from "./helpers";
 import { notificationService } from "./notifications.service";
 
 export const requestSms = async (
@@ -109,9 +114,9 @@ const codeRequest = async (
   }
 
   if (tries >= Number(process.env.MAX_CODES || 3)) {
-    const newNextTry = new Date(
-      new Date().getTime() +
-        Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600) * 1000
+    const newNextTry = addSeconds(
+      new Date(),
+      Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600)
     );
 
     await notificationService.writeCode(id, code, 0, newNextTry);

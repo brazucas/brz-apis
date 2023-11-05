@@ -1,0 +1,75 @@
+name: website-api cd
+
+run-name: Deploy website-api to live by @${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/website-api/**'
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    env:
+      working_path: apps/website-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository code
+        uses: actions/checkout@v2
+      - name: Setup the Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+      - name: Setup AWS Credentials
+        run: |
+          mkdir ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          AWS_PROFILE=default && echo AWS_PROFILE=$AWS_PROFILE >> $GITHUB_ENV
+      - name: Initialize the Terraform working directory
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: init
+        run: terraform init -input=false
+      - name: Apply the Terraform execution plan
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: plan
+        run: terraform apply -no-color -auto-approve
+        env:
+          TF_VAR_github_pat: ${{ secrets.GH_PAT }}
+
+  build_and_deploy:
+    name: Build project and Deploy
+    runs-on: ubuntu-latest
+    env:
+      working_path: apps/website-api
+    steps:
+      - name: Clone the repository code
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with: 
+          node-version: 18.x
+      - name: Build project
+        run: |
+          yarn install
+          yarn build
+        working-directory: ${{ env.working_path }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: sa-east-1
+      - name: Create .env file
+        run: |
+          echo "MAX_CODES=3" >> .env
+          echo "WAITING_TIME_AFTER_MAX_CODES=900" >> .env
+          echo "EMAIL_SOURCE=admin@brz.gg" >> .env
+          echo "NODE_ENV=production" >> .env
+        working-directory: ${{ env.working_path }}
+      - name: serverless deploy
+        uses: serverless/github-action@v3.2
+        with:
+          args: -c "cd ./${{ env.working_path }} && serverless deploy"
+          entrypoint: /bin/sh

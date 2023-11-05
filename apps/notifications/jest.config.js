@@ -14,6 +14,7 @@ module.exports = {
     "src/**/*.{ts,tsx,js,jsx}",
     "!src/app.ts",
     "!src/index.ts",
+    "!src/lambda.ts",
   ],
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/src/$1",

@@ -87,3 +87,9 @@ export const generateCode = (digits = 4) =>
   Math.round(Math.random() * 9999)
     .toString()
     .padStart(digits, "0");
+
+export const addSeconds = (date: Date, seconds: number) => {
+  const newDate = new Date(date);
+  newDate.setSeconds(newDate.getSeconds() + seconds);
+  return newDate;
+};
