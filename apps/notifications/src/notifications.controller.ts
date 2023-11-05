@@ -2,7 +2,10 @@ import { Request, Response, Router } from "express";
 import { generateCode, mailValidation, phoneValidation } from "./helpers";
 import { notificationService } from "./notifications.service";
 
-const requestSms = async ({ body }: Request, response: Response<any>) => {
+export const requestSms = async (
+  { body }: Request,
+  response: Response<any>
+) => {
   const { phoneNumber } = body;
 
   if (!phoneNumber?.length) {
@@ -40,7 +43,10 @@ const requestSms = async ({ body }: Request, response: Response<any>) => {
   }
 };
 
-const requestEmail = async ({ body }: Request, response: Response<any>) => {
+export const requestEmail = async (
+  { body }: Request,
+  response: Response<any>
+) => {
   const { email } = body;
 
   if (!email?.length) {
@@ -90,7 +96,7 @@ const codeRequest = async (
     return false;
   }
 
-  const { tries, nextTry } = await notificationService.readCodes(id);
+  const { tries, nextTry } = await notificationService.readCode(id);
 
   if (nextTry > new Date()) {
     response.status(400).json({
@@ -102,10 +108,10 @@ const codeRequest = async (
     return false;
   }
 
-  if (tries >= Number(process.env.MAX_CODES)) {
+  if (tries >= Number(process.env.MAX_CODES || 3)) {
     const newNextTry = new Date(
       new Date().getTime() +
-        Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600)
+        Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600) * 1000
     );
 
     await notificationService.writeCode(id, code, 0, newNextTry);
