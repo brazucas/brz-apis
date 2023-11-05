@@ -90,7 +90,7 @@ const codeRequest = async (
     return false;
   }
 
-  const { tries, nextTry } = await notificationService.readCodes(id);
+  const { tries, nextTry } = await notificationService.readCode(id);
 
   if (nextTry > new Date()) {
     response.status(400).json({
