@@ -1,21 +1,21 @@
-name: website-api ci
+name: notifications ci
 
-run-name: Running website-api CI by @${{ github.actor }}
+run-name: Running notifications CI by @${{ github.actor }}
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'apps/website-api/**'
+      - 'apps/notifications/**'
   pull_request:
     paths:
       - '!*.MD'
-      - 'apps/website-api/**'
+      - 'apps/notifications/**'
 jobs:
   test:
     env:
-      working_path: apps/website-api
+      working_path: apps/notifications
     strategy:
       matrix:
         platform: [ ubuntu-latest ]
@@ -27,14 +27,12 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install -g yarn
-        working-directory: ${{ env.working_path }}
-      - run: yarn install
+      - run: npm install
         working-directory: ${{ env.working_path }}
       - name: run tests & report coverage
         uses: paambaati/codeclimate-action@v4.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          coverageCommand: yarn test:cov
+          coverageCommand: npm run test:cov
           workingDirectory: ${{ env.working_path }}

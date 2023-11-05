@@ -12,7 +12,10 @@ export const writeCode = async (
   id: string,
   code: string,
   tries: number,
-  nextTry = addSeconds(new Date(), Number(process.env.WAITING_TIME) || 180)
+  nextTry = addSeconds(
+    new Date(),
+    Number(process.env.WAITING_TIME_AFTER_MAX_CODES) || 180
+  )
 ): Promise<PutItemOutput> => {
   const db = new DynamoDB({ apiVersion: "2012-08-10", region: "us-east-1" });
 
