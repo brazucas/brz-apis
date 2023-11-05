@@ -1,6 +1,6 @@
-import { readCode as readCodeFromDynamo, writeCode } from "./aws/dynamo";
-import { sendSMS } from "./aws/sns";
-import { sendEmail } from "./aws/ses";
+import { readCode as readCodeFromDynamo, writeCode } from "./adapters/dynamo";
+import { sendSMS } from "./adapters/sns";
+import { sendEmail } from "./adapters/ses";
 
 const isCodeConfirmed = async (id: string): Promise<boolean> => {
   const storedValues = await readCodeFromDynamo(id);
