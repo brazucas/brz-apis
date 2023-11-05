@@ -1,3 +1,4 @@
+import { addSeconds } from "@/helpers";
 import {
   DynamoDB,
   GetItemCommandInput,
@@ -6,7 +7,6 @@ import {
   PutItemOutput,
   UpdateItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
-import { addSeconds } from "date-fns";
 
 export const writeCode = async (
   id: string,
