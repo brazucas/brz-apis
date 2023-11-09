@@ -67,7 +67,7 @@ jobs:
         run: |
           echo "INIT_FRONTEND_API_TOKENS=${{ secrets.UNLEASH_INIT_FRONTEND_API_TOKENS }}" >> .env
           echo "INIT_CLIENT_API_TOKENS=${{ secrets.UNLEASH_INIT_CLIENT_API_TOKENS }}" >> .env
-          echo "DATABASE_URL=${{ needs.terraform.outputs.database_endpoint }}" >> .env
+          echo "DATABASE_URL=postgres://brz:${{ secrets.UNLEASH_DATABASE_PASSWORD }}@${{ needs.terraform.outputs.database_endpoint }}/feature_toggle" >> .env
           echo "DATABASE_SSL=true" >> .env
           echo "NODE_ENV=production" >> .env
         working-directory: ${{ env.working_path }}
