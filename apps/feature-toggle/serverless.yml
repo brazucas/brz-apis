@@ -1,0 +1,49 @@
+app: unleash
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-domain-manager
+  - serverless-apigw-binary
+
+custom:
+  apigwBinary:
+    types:
+      - "*/*"
+  customDomain:
+    domainName: unleash.brz.gg
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    certificateName: unleash.brz.gg
+
+service: unleash
+useDotenv: true
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: production
+  region: us-east-1
+  memorySize: 256
+  iam:
+    role: arn:aws:iam::408356563302:role/brz_lambda
+package:
+  excludeDevDependencies: true
+  patterns:
+    - package.json
+    - package-lock.json
+    - '!.cicd/**'
+functions:
+  app:
+    handler: lambda.handler
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors:
+            origins: 
+              - https://brz.gg
+      - http:
+          method: any
+          path: /{any+}
+          cors:
+              origins: 
+                - https://brz.gg

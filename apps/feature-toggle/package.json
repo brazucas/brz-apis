@@ -1,0 +1,23 @@
+{
+  "name": "feature-toggle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lambda.js",
+  "author": "BRZ.GG",
+  "license": "ISC",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=local && node -r dotenv/config ./lambda.js"
+  },
+  "dependencies": {
+    "aws-serverless-express": "^3.4.0",
+    "dotenv": "^16.3.1",
+    "intercept-require": "^1.1.0",
+    "unleash-server": "^5.6.4"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "serverless-apigw-binary": "^0.4.4",
+    "serverless-domain-manager": "^7.1.2",
+    "serverless-dotenv-plugin": "^6.0.0"
+  }
+}

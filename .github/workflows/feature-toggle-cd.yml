@@ -1,0 +1,77 @@
+name: feature-toggle cd
+
+run-name: Deploy feature-toggle to live by @${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/feature-toggle/**'
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    env:
+      working_path: apps/feature-toggle
+    runs-on: ubuntu-latest
+    outputs:
+      database_endpoint: ${{ steps.terraform.outputs.database_endpoint }}
+    steps:
+      - name: Clone the repository code
+        uses: actions/checkout@v2
+      - name: Setup the Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+      - name: Setup AWS Credentials
+        run: |
+          mkdir ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo AWS_PROFILE=default >> $GITHUB_ENV
+      - name: Initialize the Terraform working directory
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: init
+        run: terraform init -input=false
+      - name: Apply the Terraform execution plan
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: terraform
+        run: terraform apply -no-color -auto-approve
+        env:
+          TF_VAR_github_pat: ${{ secrets.GH_PAT }}
+          TF_VAR_database_password: ${{ secrets.UNLEASH_DATABASE_PASSWORD }}
+
+  build_and_deploy:
+    name: Build project and Deploy
+    runs-on: ubuntu-latest
+    needs: terraform
+    environment: feature-toggle-production
+    env:
+      working_path: apps/feature-toggle
+    steps:
+      - name: Clone the repository code
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with: 
+          node-version: 18.x
+      - name: Build project
+        run: npm install
+        working-directory: ${{ env.working_path }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Create .env file
+        run: |
+          echo "INIT_FRONTEND_API_TOKENS=${{ secrets.UNLEASH_INIT_FRONTEND_API_TOKENS }}" >> .env
+          echo "INIT_CLIENT_API_TOKENS=${{ secrets.UNLEASH_INIT_CLIENT_API_TOKENS }}" >> .env
+          echo "DATABASE_URL=${{ needs.terraform.outputs.database_endpoint }}" >> .env
+        working-directory: ${{ env.working_path }}
+      - name: serverless deploy
+        uses: serverless/github-action@v3.2
+        with:
+          args: -c "cd ./${{ env.working_path }} && serverless deploy"
+          entrypoint: /bin/sh
