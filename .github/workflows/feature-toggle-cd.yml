@@ -35,7 +35,7 @@ jobs:
         env:
           TF_VAR_github_pat: ${{ secrets.GH_PAT }}
           TF_VAR_database_password: ${{ secrets.UNLEASH_DATABASE_PASSWORD }}
-      - name: get server ip address
+      - name: get database endpoint
         working-directory: ${{ env.working_path }}/.cicd/terraform
         id: get_database_endpoint
         run: terraform output --raw database_endpoint
@@ -54,9 +54,6 @@ jobs:
         uses: actions/setup-node@v2
         with: 
           node-version: 18.x
-      - name: Build project
-        run: npm install
-        working-directory: ${{ env.working_path }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
