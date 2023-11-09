@@ -65,6 +65,8 @@ jobs:
           echo "INIT_FRONTEND_API_TOKENS=${{ secrets.UNLEASH_INIT_FRONTEND_API_TOKENS }}" >> .env
           echo "INIT_CLIENT_API_TOKENS=${{ secrets.UNLEASH_INIT_CLIENT_API_TOKENS }}" >> .env
           echo "DATABASE_URL=${{ needs.terraform.outputs.database_endpoint }}" >> .env
+          echo "DATABASE_SSL=true" >> .env
+          echo "NODE_ENV=production" >> .env
         working-directory: ${{ env.working_path }}
       - name: serverless deploy
         uses: serverless/github-action@v3.2
