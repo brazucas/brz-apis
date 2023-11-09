@@ -3,11 +3,6 @@ name: feature-toggle cd
 run-name: Deploy feature-toggle to live by @${{ github.actor }}
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'apps/feature-toggle/**'
   workflow_dispatch:
 
 jobs:
@@ -16,7 +11,7 @@ jobs:
       working_path: apps/feature-toggle
     runs-on: ubuntu-latest
     outputs:
-      database_endpoint: ${{ steps.terraform.outputs.database_endpoint }}
+      database_endpoint: ${{ steps.get_database_endpoint.outputs.stdout }}
     steps:
       - name: Clone the repository code
         uses: actions/checkout@v2
@@ -40,6 +35,10 @@ jobs:
         env:
           TF_VAR_github_pat: ${{ secrets.GH_PAT }}
           TF_VAR_database_password: ${{ secrets.UNLEASH_DATABASE_PASSWORD }}
+      - name: get server ip address
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: get_database_endpoint
+        run: terraform output --raw database_endpoint
 
   build_and_deploy:
     name: Build project and Deploy
