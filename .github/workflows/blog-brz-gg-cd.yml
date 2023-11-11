@@ -10,6 +10,7 @@ jobs:
     env:
       working_path: apps/blog.brz.gg
     runs-on: ubuntu-latest
+    environment: blog.brz.gg
     steps:
       - name: Clone the repository code
         uses: actions/checkout@v2

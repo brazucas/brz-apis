@@ -10,6 +10,7 @@ jobs:
     env:
       working_path: apps/terraform
     runs-on: ubuntu-latest
+    environment: terraform
     steps:
       - name: Clone the repository code
         uses: actions/checkout@v2

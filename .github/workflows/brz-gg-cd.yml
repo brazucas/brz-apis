@@ -36,6 +36,7 @@ jobs:
   build_and_sync:
     name: Build project and Deploy
     runs-on: ubuntu-latest
+    environment: brz.gg
     env:
       working_path: apps/brz.gg
     steps:
