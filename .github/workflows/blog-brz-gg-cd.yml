@@ -1,0 +1,34 @@
+name: blog.brz.gg cd
+
+run-name: Deploy blog.brz.gg to live by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    env:
+      working_path: apps/blog.brz.gg
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository code
+        uses: actions/checkout@v2
+      - name: Setup the Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+      - name: Setup AWS Credentials
+        run: |
+          mkdir ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          AWS_PROFILE=default && echo AWS_PROFILE=$AWS_PROFILE >> $GITHUB_ENV
+      - name: Initialize the Terraform working directory
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: init
+        run: terraform init -input=false
+      - name: Apply the Terraform execution plan
+        working-directory: ${{ env.working_path }}/.cicd/terraform
+        id: plan
+        run: terraform apply -no-color -auto-approve
+        env:
+          TF_VAR_github_pat: ${{ secrets.GH_PAT }}
