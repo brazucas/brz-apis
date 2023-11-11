@@ -1,0 +1,15 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+    },
+    // "eslint.validate": ["javascript", "typescript"],
+    // "editor.formatOnSave": true,
+    // "eslint.format.enable": true,
+    // "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    // "[typescript]": {
+    //     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    // },
+    // "[typescriptreact]": {
+    //     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    // },
+}
