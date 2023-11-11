@@ -72,4 +72,5 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@v3.2
         with:
-          args: deploy
+          args: -c "cd ./${{ env.working_path }} && serverless deploy"
+          entrypoint: /bin/sh
