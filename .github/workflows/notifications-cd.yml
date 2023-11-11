@@ -3,11 +3,6 @@ name: notifications cd
 run-name: Deploy notifications to live by @${{ github.actor }}
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'apps/notifications/**'
   workflow_dispatch:
 
 jobs:

@@ -3,9 +3,7 @@ name: terraform cd
 run-name: Deploy terraform to live by @${{ github.actor }}
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   terraform:
