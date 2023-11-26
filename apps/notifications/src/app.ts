@@ -1,5 +1,5 @@
 import * as express from "express";
-import { notificationsController } from "./notifications.controller";
+import { notificationsController } from "./otp.controller";
 
 const app = express();
 const port = process.env.PORT || 3000;

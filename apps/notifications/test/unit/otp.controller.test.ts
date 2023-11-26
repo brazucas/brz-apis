@@ -1,4 +1,4 @@
-import { confirmCode, requestCode } from "@/notifications.controller";
+import { confirmCode, requestCode } from "@/otp.controller";
 import { notificationService } from "@/notifications.service";
 import { Request, Response } from "express";
 

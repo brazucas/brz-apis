@@ -68,7 +68,7 @@ describe("notificationService", () => {
       {
         expectedResult: {
           nextTry: new Date(),
-          tries: 1,
+          tries: 0,
           code: "123",
         },
         dynamoResponseMock: {
@@ -83,7 +83,7 @@ describe("notificationService", () => {
       {
         expectedResult: {
           nextTry: new Date(),
-          tries: 1,
+          tries: 0,
           code: "123",
         },
         dynamoResponseMock: {
@@ -95,17 +95,29 @@ describe("notificationService", () => {
         },
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: {
           Item: null,
         },
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: null,
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: {
           Item: {
             code: null,
@@ -113,7 +125,11 @@ describe("notificationService", () => {
         },
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: {
           Item: {
             S: null,
