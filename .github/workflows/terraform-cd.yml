@@ -31,3 +31,6 @@ jobs:
         working-directory: ${{ env.working_path }}
         id: plan
         run: terraform apply -no-color -auto-approve
+        env:
+          TF_VAR_public_key: ${{ secrets.TERRAFORM_OPENVPN_PUBLIC_KEY }}
+          TF_VAR_openvpn_admin_password: ${{ secrets.TERRAFORM_OPENVPN_ADMIN_PASSWORD }}
