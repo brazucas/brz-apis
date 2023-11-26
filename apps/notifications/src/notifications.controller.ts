@@ -7,38 +7,71 @@ import {
 } from "./helpers";
 import { notificationService } from "./notifications.service";
 
-export const requestSms = async (
-  { body }: Request,
-  response: Response<any>
-) => {
-  const { phoneNumber } = body;
+const otpServiceRequestFunction = {
+  sms: notificationService.sendSMS,
+  email: notificationService.sendEmail,
+};
 
-  if (!phoneNumber?.length) {
+export const requestCode = async (
+  { body }: Request,
+  response: Response<any>,
+  type: "sms" | "email"
+) => {
+  const { id } = body;
+
+  if (!id?.length) {
     return response.status(400).json({
-      error: "Fill all required fields.",
+      informAllFields: true,
     });
   }
 
-  if (!phoneValidation.test(phoneNumber)) {
+  if (type === "sms" && !phoneValidation.test(id)) {
     return response.status(400).json({
-      message: "Invalid phone number.",
+      invalidPhoneNumber: true,
+    });
+  }
+
+  if (type === "email" && !mailValidation.test(id)) {
+    return response.status(400).json({
+      invalidEmail: true,
     });
   }
 
   const code = generateCode();
 
   try {
-    if (!(await codeRequest(phoneNumber, code, response))) {
-      return;
+    const { tries, nextTry } = await notificationService.readCode(id);
+
+    if (nextTry > new Date()) {
+      const cooldownTime = Math.floor(
+        (nextTry.getTime() - new Date().getTime()) / 1000
+      );
+
+      response.status(400).json({
+        cooldownTime,
+        tries,
+      });
+      return false;
     }
 
-    await notificationService.sendSMS(
-      phoneNumber,
+    if (tries >= Number(process.env.MAX_CODES || 3)) {
+      const newNextTry = addSeconds(
+        new Date(),
+        Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600)
+      );
+
+      await notificationService.writeCode(id, code, 0, newNextTry);
+    } else {
+      await notificationService.writeCode(id, code, tries + 1);
+    }
+
+    await otpServiceRequestFunction[type](
+      id,
       `${code} é o seu código de verificação no BRZ`
     );
 
     response.status(200).json({
-      message: "SMS sent",
+      codeSent: true,
     });
   } catch (err: any) {
     console.error(err);
@@ -48,88 +81,50 @@ export const requestSms = async (
   }
 };
 
-export const requestEmail = async (
-  { body }: Request,
+export const confirmCode = async (
+  request: Request,
   response: Response<any>
 ) => {
-  const { email } = body;
+  const { code } = request.body;
+  const id = request.params?.id;
 
-  if (!email?.length) {
+  if (!code?.length || !id?.length) {
     return response.status(400).json({
-      error: "Fill all required fields.",
+      informAllFields: true,
     });
   }
-
-  if (!mailValidation.test(email)) {
-    return response.status(400).json({
-      message: "Invalid email.",
-    });
-  }
-
-  const code = generateCode();
 
   try {
-    if (!(await codeRequest(email, code, response))) {
-      return;
+    const codeRequest = await notificationService.readCode(id);
+
+    if (!codeRequest || !codeRequest.code) {
+      return response.status(404).json({
+        codeNotFound: true,
+      });
     }
 
-    await notificationService.sendEmail(
-      email,
-      `${code} é o seu código de verificação no BRZ`
-    );
+    if (code !== codeRequest.code) {
+      return response.status(400).json({
+        wrongCode: true,
+      });
+    }
 
-    response.status(200).json({
-      message: "Email sent",
-    });
+    response.status(200).json({ message: "Code confirmed successfully" });
   } catch (err: any) {
-    console.error(err);
     response.status(500).json({
-      message: "Internal server error",
+      message: err.message?.replace(/^.*?\{/, "{"),
     });
   }
-};
-
-const codeRequest = async (
-  id: string,
-  code: string,
-  response: Response
-): Promise<boolean> => {
-  if (await notificationService.isCodeConfirmed(id)) {
-    response.status(200).json({
-      message: "already confirmed",
-    });
-    return false;
-  }
-
-  const { tries, nextTry } = await notificationService.readCode(id);
-
-  if (nextTry > new Date()) {
-    response.status(400).json({
-      message:
-        `Id ${id} request on cooldown for ` +
-        Math.floor((nextTry.getTime() - new Date().getTime()) / 1000) +
-        " more seconds.",
-    });
-    return false;
-  }
-
-  if (tries >= Number(process.env.MAX_CODES || 3)) {
-    const newNextTry = addSeconds(
-      new Date(),
-      Number(process.env.WAITING_TIME_AFTER_MAX_CODES || 3600)
-    );
-
-    await notificationService.writeCode(id, code, 0, newNextTry);
-  } else {
-    await notificationService.writeCode(id, code, tries + 1);
-  }
-
-  return true;
 };
 
 const router = Router();
 
-router.post("/requestSms", requestSms);
-router.post("/requestEmail", requestEmail);
+router.post("/requestSms", (request, response) =>
+  requestCode(request, response, "sms")
+);
+router.post("/requestEmail", (request, response) =>
+  requestCode(request, response, "email")
+);
+router.post("/:id/confirm", confirmCode);
 
 export { router as notificationsController };
