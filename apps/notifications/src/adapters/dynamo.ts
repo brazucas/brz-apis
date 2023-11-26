@@ -19,7 +19,7 @@ export const writeCode = async (
   const db = new DynamoDB({ apiVersion: "2012-08-10", region: "us-east-1" });
 
   const params: PutItemCommandInput = {
-    TableName: "CONFIRMATION_CODE",
+    TableName: "OTP",
     Item: {
       id: { S: id },
       code: { S: code },
@@ -35,7 +35,7 @@ export const readCode = (id: string): Promise<GetItemOutput> => {
   const db = new DynamoDB({ apiVersion: "2012-08-10", region: "us-east-1" });
 
   const params: GetItemCommandInput = {
-    TableName: "CONFIRMATION_CODE",
+    TableName: "OTP",
     Key: {
       id: { S: id },
     },

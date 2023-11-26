@@ -12,14 +12,18 @@ const readCode = async (
   const entry = await readCodeFromDynamo(id);
 
   if (!entry?.Item || !entry.Item.code?.S) {
-    return null;
+    return {
+      nextTry: new Date(),
+      tries: 0,
+      code: null,
+    };
   }
 
   const storedNextTry = entry.Item.nextTry?.S
     ? new Date(entry.Item.nextTry.S)
     : new Date();
 
-  const tries = Number(entry.Item.tries?.N || 1);
+  const tries = Number(entry.Item.tries?.N || 0);
   const code = entry.Item.code.S;
 
   return {

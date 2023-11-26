@@ -5,7 +5,7 @@ import {
   mailValidation,
   phoneValidation,
 } from "./helpers";
-import { notificationService } from "./notifications.service";
+import { notificationService } from "./otp.service";
 
 const otpServiceRequestFunction = {
   sms: notificationService.sendSMS,
@@ -119,12 +119,12 @@ export const confirmCode = async (
 
 const router = Router();
 
-router.post("/requestSms", (request, response) =>
+router.post("/otp/sms", (request, response) =>
   requestCode(request, response, "sms")
 );
-router.post("/requestEmail", (request, response) =>
+router.post("/otp/email", (request, response) =>
   requestCode(request, response, "email")
 );
-router.post("/:id/confirm", confirmCode);
+router.post("/otp/:id/check", confirmCode);
 
 export { router as notificationsController };

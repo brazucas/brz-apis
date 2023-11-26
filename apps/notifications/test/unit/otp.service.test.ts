@@ -1,5 +1,5 @@
 import { readCode as readCodeFromDynamo } from "@/adapters/dynamo";
-import { notificationService } from "@/notifications.service";
+import { notificationService } from "@/otp.service";
 
 jest.useFakeTimers().setSystemTime(new Date("2021-10-10T10:00:00Z"));
 
@@ -7,7 +7,7 @@ jest.mock("@/adapters/dynamo");
 jest.mock("@/adapters/sns");
 jest.mock("@/adapters/ses");
 
-describe("notificationService", () => {
+describe("OTPService", () => {
   describe("readCode", () => {
     test.each([
       {
@@ -68,7 +68,7 @@ describe("notificationService", () => {
       {
         expectedResult: {
           nextTry: new Date(),
-          tries: 1,
+          tries: 0,
           code: "123",
         },
         dynamoResponseMock: {
@@ -83,7 +83,7 @@ describe("notificationService", () => {
       {
         expectedResult: {
           nextTry: new Date(),
-          tries: 1,
+          tries: 0,
           code: "123",
         },
         dynamoResponseMock: {
@@ -95,17 +95,29 @@ describe("notificationService", () => {
         },
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: {
           Item: null,
         },
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: null,
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: {
           Item: {
             code: null,
@@ -113,7 +125,11 @@ describe("notificationService", () => {
         },
       },
       {
-        expectedResult: null,
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 0,
+          code: null,
+        },
         dynamoResponseMock: {
           Item: {
             S: null,

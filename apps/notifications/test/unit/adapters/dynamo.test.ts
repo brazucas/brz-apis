@@ -55,7 +55,7 @@ describe("DynamoDB Adapter", () => {
       expect(DynamoDB).toHaveBeenCalledTimes(1);
       expect(putItemMock).toHaveBeenCalledTimes(1);
       expect(putItemMock).toHaveBeenCalledWith({
-        TableName: "CONFIRMATION_CODE",
+        TableName: "OTP",
         Item: {
           id: { S: id },
           code: { S: code },
@@ -75,7 +75,7 @@ describe("DynamoDB Adapter", () => {
       expect(DynamoDB).toHaveBeenCalledTimes(1);
       expect(getItemMock).toHaveBeenCalledTimes(1);
       expect(getItemMock).toHaveBeenCalledWith({
-        TableName: "CONFIRMATION_CODE",
+        TableName: "OTP",
         Key: {
           id: { S: "123" },
         },
