@@ -66,7 +66,7 @@ resource "aws_instance" "openvpn" {
   # https://docs.openvpn.net/how-to-tutorialsguides/virtual-platforms/amazon-ec2-appliance-ami-quick-start-guide/
   user_data = <<USERDATA
 admin_user=brz
-admin_pw=${var.admin_password}
+admin_pw=${var.openvpn_admin_password}
 USERDATA
 }
 

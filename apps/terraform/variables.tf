@@ -1,4 +1,4 @@
-variable "admin_password" {}
+variable "openvpn_admin_password" {}
 variable "public_key" {}
 
 locals {
