@@ -1,4 +1,4 @@
-import { confirmCodes, readCode, writeCode } from "@/adapters/dynamo";
+import { readCode, writeCode } from "@/adapters/dynamo";
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 
 const putItemMock = jest.fn();
@@ -78,25 +78,6 @@ describe("DynamoDB Adapter", () => {
         TableName: "CONFIRMATION_CODE",
         Key: {
           id: { S: "123" },
-        },
-      });
-    });
-  });
-
-  describe("confirmCodes", () => {
-    it("should confirmCode in dynamodb", async () => {
-      await confirmCodes("123");
-
-      expect(DynamoDB).toHaveBeenCalledTimes(1);
-      expect(updateItemMock).toHaveBeenCalledTimes(1);
-      expect(updateItemMock).toHaveBeenCalledWith({
-        TableName: "CONFIRMATION_CODE",
-        Key: {
-          steamId: { S: "123" },
-        },
-        UpdateExpression: "set isConfirmed = :yes",
-        ExpressionAttributeValues: {
-          ":yes": { BOOL: true },
         },
       });
     });

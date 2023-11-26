@@ -8,59 +8,13 @@ jest.mock("@/adapters/sns");
 jest.mock("@/adapters/ses");
 
 describe("notificationService", () => {
-  describe("isCodeConfirmed", () => {
-    it("should return true if code is confirmed", async () => {
-      (readCodeFromDynamo as jest.Mock).mockResolvedValueOnce({
-        Item: {
-          isConfirmed: {
-            BOOL: true,
-          },
-        },
-      });
-
-      const result = await notificationService.isCodeConfirmed("123");
-
-      expect(result).toBe(true);
-    });
-
-    test.each([
-      {
-        Item: {
-          isConfirmed: {
-            BOOL: false,
-          },
-        },
-      },
-      {},
-      null,
-      {
-        Item: {},
-      },
-      {
-        Item: {
-          isConfirmed: {
-            BOOL: false,
-          },
-        },
-      },
-    ])(
-      "should return false if dynamo response is %j",
-      async (dynamoResponse) => {
-        (readCodeFromDynamo as jest.Mock).mockResolvedValueOnce(dynamoResponse);
-
-        const result = await notificationService.isCodeConfirmed("123");
-
-        expect(result).toBe(false);
-      }
-    );
-  });
-
   describe("readCode", () => {
     test.each([
       {
         expectedResult: {
           nextTry: new Date(),
           tries: 3,
+          code: "123",
         },
         dynamoResponseMock: {
           Item: {
@@ -70,18 +24,8 @@ describe("notificationService", () => {
             tries: {
               N: "3",
             },
-          },
-        },
-      },
-      {
-        expectedResult: {
-          nextTry: new Date(),
-          tries: 3,
-        },
-        dynamoResponseMock: {
-          Item: {
-            tries: {
-              N: "3",
+            code: {
+              S: "123",
             },
           },
         },
@@ -90,6 +34,24 @@ describe("notificationService", () => {
         expectedResult: {
           nextTry: new Date(),
           tries: 3,
+          code: "123",
+        },
+        dynamoResponseMock: {
+          Item: {
+            tries: {
+              N: "3",
+            },
+            code: {
+              S: "123",
+            },
+          },
+        },
+      },
+      {
+        expectedResult: {
+          nextTry: new Date(),
+          tries: 3,
+          code: "123",
         },
         dynamoResponseMock: {
           Item: {
@@ -97,6 +59,9 @@ describe("notificationService", () => {
             tries: {
               N: "3",
             },
+            code: {
+              S: "123",
+            },
           },
         },
       },
@@ -104,10 +69,14 @@ describe("notificationService", () => {
         expectedResult: {
           nextTry: new Date(),
           tries: 1,
+          code: "123",
         },
         dynamoResponseMock: {
           Item: {
             tries: {},
+            code: {
+              S: "123",
+            },
           },
         },
       },
@@ -115,18 +84,40 @@ describe("notificationService", () => {
         expectedResult: {
           nextTry: new Date(),
           tries: 1,
+          code: "123",
         },
         dynamoResponseMock: {
-          Item: {},
+          Item: {
+            code: {
+              S: "123",
+            },
+          },
         },
       },
       {
-        expectedResult: {
-          nextTry: new Date(),
-          tries: 1,
-        },
+        expectedResult: null,
         dynamoResponseMock: {
           Item: null,
+        },
+      },
+      {
+        expectedResult: null,
+        dynamoResponseMock: null,
+      },
+      {
+        expectedResult: null,
+        dynamoResponseMock: {
+          Item: {
+            code: null,
+          },
+        },
+      },
+      {
+        expectedResult: null,
+        dynamoResponseMock: {
+          Item: {
+            S: null,
+          },
         },
       },
     ])(
