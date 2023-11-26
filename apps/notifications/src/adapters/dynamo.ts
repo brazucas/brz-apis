@@ -5,7 +5,6 @@ import {
   GetItemOutput,
   PutItemCommandInput,
   PutItemOutput,
-  UpdateItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
 
 export const writeCode = async (
@@ -43,21 +42,4 @@ export const readCode = (id: string): Promise<GetItemOutput> => {
   };
 
   return db.getItem(params);
-};
-
-export const confirmCodes = (id: string): Promise<PutItemOutput> => {
-  const db = new DynamoDB({ apiVersion: "2012-08-10", region: "us-east-1" });
-
-  const params: UpdateItemCommandInput = {
-    TableName: "CONFIRMATION_CODE",
-    Key: {
-      steamId: { S: id },
-    },
-    UpdateExpression: "set isConfirmed = :yes",
-    ExpressionAttributeValues: {
-      ":yes": { BOOL: true },
-    },
-  };
-
-  return db.updateItem(params);
 };
