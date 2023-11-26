@@ -10,6 +10,10 @@ output "brz_vpn_private_ip" {
   value = data.terraform_remote_state.brz_state.outputs.brz_vpn_private_ip
 }
 
+output "brz_vpn_public_ip" {
+  value = data.terraform_remote_state.brz_state.outputs.brz_vpn_public_ip
+}
+
 output "brz_vpc_nat_gateway_public_ip" {
   value = data.terraform_remote_state.brz_state.outputs.brz_vpc_nat_gateway_public_ip
 }
