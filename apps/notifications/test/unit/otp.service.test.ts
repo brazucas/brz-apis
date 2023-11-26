@@ -7,7 +7,7 @@ jest.mock("@/adapters/dynamo");
 jest.mock("@/adapters/sns");
 jest.mock("@/adapters/ses");
 
-describe("notificationService", () => {
+describe("OTPService", () => {
   describe("readCode", () => {
     test.each([
       {

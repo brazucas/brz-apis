@@ -2,11 +2,11 @@ import { confirmCode, requestCode } from "@/otp.controller";
 import { notificationService } from "@/otp.service";
 import { Request, Response } from "express";
 
-jest.mock("@/notifications.service");
+jest.mock("@/otp.service");
 
 jest.useFakeTimers().setSystemTime(new Date("2021-10-10T10:00:00Z"));
 
-describe("notificationsController", () => {
+describe("OTPController", () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
 
