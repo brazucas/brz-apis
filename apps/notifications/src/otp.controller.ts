@@ -5,7 +5,7 @@ import {
   mailValidation,
   phoneValidation,
 } from "./helpers";
-import { notificationService } from "./notifications.service";
+import { notificationService } from "./otp.service";
 
 const otpServiceRequestFunction = {
   sms: notificationService.sendSMS,

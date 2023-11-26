@@ -1,5 +1,5 @@
 import { confirmCode, requestCode } from "@/otp.controller";
-import { notificationService } from "@/notifications.service";
+import { notificationService } from "@/otp.service";
 import { Request, Response } from "express";
 
 jest.mock("@/notifications.service");

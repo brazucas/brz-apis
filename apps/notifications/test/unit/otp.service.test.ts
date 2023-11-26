@@ -1,5 +1,5 @@
 import { readCode as readCodeFromDynamo } from "@/adapters/dynamo";
-import { notificationService } from "@/notifications.service";
+import { notificationService } from "@/otp.service";
 
 jest.useFakeTimers().setSystemTime(new Date("2021-10-10T10:00:00Z"));
 
