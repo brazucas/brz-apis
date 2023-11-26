@@ -14,7 +14,7 @@ jobs:
       subnet_id: ${{ steps.get_subnet_id.outputs.stdout }}
       security_group_id: ${{ steps.get_security_group_id.outputs.stdout }}
       brz_vpn_private_ip: ${{ steps.get_brz_vpn_private_ip.outputs.stdout }}
-      brz_vpc_nat_gateway_pubic_ip: ${{ steps.get_brz_vpc_nat_gateway_pubic_ip.outputs.stdout }}
+      brz_vpc_nat_gateway_public_ip: ${{ steps.get_brz_vpc_nat_gateway_public_ip.outputs.stdout }}
       brz_vpc_nat_gateway_private_ip: ${{ steps.get_brz_vpc_nat_gateway_private_ip.outputs.stdout }}
     steps:
       - name: Clone the repository code
@@ -52,12 +52,12 @@ jobs:
         run: terraform output --raw brz_vpn_private_ip
       - name: brz vpc nat gateway public ip
         working-directory: ${{ env.working_path }}/.cicd/terraform
-        id: get_brz_vpc_nat_gateway_pubic_ip
+        id: get_brz_vpc_nat_gateway_public_ip
         run: terraform output --raw brz_vpc_nat_gateway_public_ip
       - name: brz vpc nat gateway private ip
         working-directory: ${{ env.working_path }}/.cicd/terraform
         id: get_brz_vpc_nat_gateway_private_ip
-        run: terraform output --raw brz_vpc_nat_gateway_public_ip
+        run: terraform output --raw brz_vpc_nat_gateway_private_ip
 
   build_and_deploy:
     name: Build project and Deploy
@@ -91,11 +91,11 @@ jobs:
           echo "WAITING_TIME_AFTER_MAX_CODES=900" >> .env
           echo "EMAIL_SOURCE=admin@brz.gg" >> .env
           echo "NODE_ENV=production" >> .env
-          SLS_IP_ALLOWLIST="${{ needs.terraform.outputs.brz_vpn_private_ip }},${{ needs.terraform.outputs.brz_vpc_nat_gateway_pubic_ip }},${{ needs.terraform.outputs.brz_vpc_nat_gateway_private_ip }}"
-          SLS_LAMBDA_ROLE=${{ secrets.AWS_LAMBDA_ROLE_ARN }}
-          SLS_VPC_SG_ID="${{ needs.terraform.outputs.security_group_id }}"
-          SLS_VPC_SUBNET_ID="${{ needs.terraform.outputs.subnet_id }}"
-          SLS_DOMAIN_NAME=${{ env.domain_name }}
+          echo "SLS_IP_ALLOWLIST=${{ needs.terraform.outputs.brz_vpn_private_ip }},${{ needs.terraform.outputs.brz_vpc_nat_gateway_public_ip }},${{ needs.terraform.outputs.brz_vpc_nat_gateway_private_ip }}"
+          echo "SLS_LAMBDA_ROLE=${{ secrets.AWS_LAMBDA_ROLE_ARN }}"
+          echo "SLS_VPC_SG_ID=${{ needs.terraform.outputs.security_group_id }}"
+          echo "SLS_VPC_SUBNET_ID=${{ needs.terraform.outputs.subnet_id }}"
+          echo "SLS_DOMAIN_NAME=${{ env.domain_name }}"
         working-directory: ${{ env.working_path }}
       - name: serverless deploy
         uses: serverless/github-action@v3.2
