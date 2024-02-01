@@ -1,4 +1,4 @@
-name: Palworld Stop
+name: palworld-stop
 on:
   schedule:
     # @see https://crontab.guru
@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   stop_server:
+    name: Stop Server
     runs-on: ubuntu-latest
     steps:
       - name: Clone the repository code

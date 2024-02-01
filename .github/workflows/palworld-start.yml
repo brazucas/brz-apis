@@ -1,8 +1,9 @@
-name: Palworld Start
+name: palworld-start
 on: 
   workflow_dispatch:
 jobs:
   start_server:
+    name: Start Server
     runs-on: ubuntu-latest
     outputs:
         server_ip_address: ${{ steps.get_ip_address.outputs.stdout }}
