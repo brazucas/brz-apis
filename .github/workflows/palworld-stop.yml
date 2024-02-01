@@ -29,7 +29,7 @@ jobs:
         run: terraform output --raw palworld_instance_id
       - name: stop server
         run: |
-          aws ec2 stop-instances --instance-ids ${{ steps.get_instance_id.outputs.stdout }}
+          aws ec2 stop-instances --instance-ids ${{ steps.get_instance_id.outputs.stdout }} --region sa-east-1
   notify:
     needs: stop_server
     name: Discord Notification
