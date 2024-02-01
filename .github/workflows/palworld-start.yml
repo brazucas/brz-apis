@@ -17,6 +17,7 @@ jobs:
           echo "[default]" > ~/.aws/credentials
           echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
           echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "aws_region = sa-east-1" >> ~/.aws/credentials
           AWS_PROFILE=default && echo AWS_PROFILE=$AWS_PROFILE >> $GITHUB_ENV
       - name: Initialize the Terraform working directory
         working-directory: apps/palworld/.cicd/terraform
