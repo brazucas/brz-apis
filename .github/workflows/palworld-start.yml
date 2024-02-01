@@ -34,7 +34,7 @@ jobs:
         run: |
           aws ec2 start-instances --instance-ids ${{ steps.get_instance_id.outputs.stdout }}
   notify:
-    needs: terraform
+    needs: start_server
     name: Start instance
     runs-on: ubuntu-latest
     steps:
