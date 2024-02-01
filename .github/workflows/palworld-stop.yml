@@ -1,0 +1,44 @@
+name: Palworld Stop
+on:
+  schedule:
+    # @see https://crontab.guru
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+jobs:
+  stop_server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository code
+        uses: actions/checkout@v2
+      - name: Setup the Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+      - name: Setup AWS Credentials
+        run: |
+          mkdir ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          AWS_PROFILE=default && echo AWS_PROFILE=$AWS_PROFILE >> $GITHUB_ENV
+      - name: Initialize the Terraform working directory
+        working-directory: apps/palworld/.cicd/terraform
+        id: init
+        run: terraform init -input=false
+      - name: get server instance id
+        working-directory: apps/palworld/.cicd/terraform
+        id: get_instance_id
+        run: terraform output --raw palworld_instance_id
+      - name: stop server
+        run: |
+          aws ec2 stop-instances --instance-ids ${{ steps.get_instance_id.outputs.stdout }}
+  notify:
+    needs: terraform
+    name: Discord Notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.PALWORLD_WEBHOOK_ID }}
+          webhook_token: ${{ vars.PALWORLD_WEBHOOK_TOKEN }}
+          args: "Atenção! o Pal foi desligado."
+
+
