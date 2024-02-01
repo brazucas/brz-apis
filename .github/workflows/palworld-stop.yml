@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: appleboy/discord-action@master
         with:
-          webhook_id: ${{ secrets.PALWORLD_WEBHOOK_ID }}
+          webhook_id: ${{ vars.PALWORLD_WEBHOOK_ID }}
           webhook_token: ${{ vars.PALWORLD_WEBHOOK_TOKEN }}
           args: "Atenção! o Pal foi desligado."
 

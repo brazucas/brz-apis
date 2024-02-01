@@ -35,11 +35,11 @@ jobs:
           aws ec2 start-instances --instance-ids ${{ steps.get_instance_id.outputs.stdout }} --region sa-east-1
   notify:
     needs: start_server
-    name: Start instance
+    name: Discord Notification
     runs-on: ubuntu-latest
     steps:
       - uses: appleboy/discord-action@master
         with:
-          webhook_id: ${{ secrets.PALWORLD_WEBHOOK_ID }}
+          webhook_id: ${{ vars.PALWORLD_WEBHOOK_ID }}
           webhook_token: ${{ vars.PALWORLD_WEBHOOK_TOKEN }}
           args: "Atenção! o Pal foi iniciado (DNS: pal.brz.gg:8211, IP estático ${{ needs.terraform.outputs.server_ip_address }}:8211)."
