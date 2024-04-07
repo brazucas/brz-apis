@@ -4,7 +4,8 @@ import { StorageService } from "@storage/types/storage.interface";
 import { awsConfig } from "@storage/config/aws";
 import { storageConfig } from "@storage/config/storage";
 
-const FILE_ALLOWLIST = ["GTA_SA.iso", "gta_sa.exe"];
+// const FILE_ALLOWLIST = ["GTA_SA.iso", "gta_sa.exe"]; // Using too much bandwidth
+const FILE_ALLOWLIST = [];
 
 export class AWSS3Adapter implements StorageService {
   protected s3Client: S3Client;
