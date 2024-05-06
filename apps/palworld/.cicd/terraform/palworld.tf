@@ -31,7 +31,7 @@ resource "aws_security_group" "palworld_server" {
 }
 
 resource "aws_instance" "palworld_server" {
-    ami = "ami-0162b990068ef0498"
+    ami = "ami-0c82688761c4e566f"
     availability_zone = "sa-east-1c"
     instance_type = "t2.2xlarge"
     key_name = "palworld_keypair"
