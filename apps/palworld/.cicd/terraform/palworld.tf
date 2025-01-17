@@ -32,15 +32,16 @@ resource "aws_security_group" "palworld_server" {
 
 resource "aws_instance" "palworld_server" {
     ami = "ami-0c82688761c4e566f"
+    
     availability_zone = "sa-east-1c"
     instance_type = "t2.2xlarge"
-    key_name = "palworld_keypair"
+    key_name = aws_key_pair.palworld_keypair.key_name
 
     vpc_security_group_ids = [aws_security_group.palworld_server.id]
 
     root_block_device {
         volume_type           = "gp2"
-        volume_size           = 8
+        volume_size           = 32
         delete_on_termination = false
     }
 
@@ -55,7 +56,6 @@ resource "aws_instance" "palworld_server" {
 
 resource "aws_eip" "palworld_server" {
     instance = aws_instance.palworld_server.id
-    vpc = true
 }
 
 resource "aws_route53_record" "palworld" {
